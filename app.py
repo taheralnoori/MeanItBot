@@ -88,20 +88,9 @@ def getWord(message):
 	user = db.findUser(str(message.from_user.id))
 	data = google_dict.find_word(user[1], message.text)
 	if (data.status_code == 200):
-		createAnswer(user[1], data.json(), message)
+		createAnswer(data.json(), message)
 
-def createAnswer(language, data, message):
-	answer = "ok"
-	print(data)
-	if language == 'en':
-		createEnglishAnswer(data, message)
-	# elif language == 'fr':
-	# 	answer = createFrenchAnswer(data)
-	# elif language == "de":
-	#  	answer = createGermanAnswer(data)
-	return answer
-
-def createEnglishAnswer(data_list, message):
+def createAnswer(data_list, message):
 	audio = None
 	for data in data_list:
 		word = data['word'].capitalize()
