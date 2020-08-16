@@ -12,8 +12,21 @@ def send_welcome(message):
 	user = db.findUser(str(message.from_user.id))
 	if user is None:
 		db.insertUser(str(message.from_user.id), "en")
-		msg = bot.send_message(message.chat.id, "I can explain to you any word.")
-		msg = bot.send_message(message.chat.id, "Please select your preferred language:", reply_markup=markups.language_markup)
+	else:
+		db.updateLanguage(str(message.from_user.id), "en")
+	msg = bot.send_message(message.chat.id, "I can explain to you any word.\nPlease select your preferred language:", reply_markup=markups.language_markup)
+
+@bot.message_handler(commands=['help'])
+def get_info(message):
+	msg = "Hello, my name is *MeanIt*! I am here for you to help with new words! Just add the word down here and I will show you the meanings!"
+	msg += "\n\nYou can control me by sending these commands:\n\n"
+	msg += "*Change language\n*"
+	msg += "/english - set current language English\n"
+	msg += "/french - set current language French\n"
+	msg += "/german - set current language German\n\n"
+	msg += "/help - get help on using the bot\n"
+	bot.send_message(message.chat.id, msg, parse_mode='Markdown')
+
 
 OFFSET = 127462 - ord('A')
 
@@ -30,7 +43,7 @@ def setLanguage(call):
 	elif call.data == "de":
 		setGermanLanguage(call.message)
 
-@bot.message_handler(commands=['English'])
+@bot.message_handler(commands=['english'])
 def setEnglishLanguage(message):
 	db = data_base.DataBase()
 	user = db.findUser(str(message.from_user.id))
@@ -43,7 +56,7 @@ def setEnglishLanguage(message):
 		answer = "I already know English" + flag('gb') + "."
 	msg = bot.send_message(message.chat.id, answer)
 
-@bot.message_handler(commands=['French'])
+@bot.message_handler(commands=['french'])
 def setFrenchLanguage(message):
 	db = data_base.DataBase()
 	user = db.findUser(str(message.from_user.id))
@@ -56,7 +69,7 @@ def setFrenchLanguage(message):
 		answer = "Je connais déjà le français" + flag('fr') + "."
 	msg = bot.send_message(message.chat.id, answer)
 
-@bot.message_handler(commands=['German'])
+@bot.message_handler(commands=['german'])
 def setGermanLanguage(message):
 	db = data_base.DataBase()
 	user = db.findUser(str(message.from_user.id))
@@ -75,22 +88,49 @@ def getWord(message):
 	user = db.findUser(str(message.from_user.id))
 	data = google_dict.find_word(user[1], message.text)
 	if (data.status_code == 200):
-		bot.send_message(message.chat.id, createAnswer(user[1], data.json()))
+		createAnswer(user[1], data.json(), message)
 
-def createAnswer(language, data):
+def createAnswer(language, data, message):
+	answer = "ok"
+	print(data)
 	if language == 'en':
-		answer = createEnglishAnswer(data)
+		createEnglishAnswer(data, message)
 	# elif language == 'fr':
 	# 	answer = createFrenchAnswer(data)
 	# elif language == "de":
-	# 	answer = createGermanAnswer(data)
+	#  	answer = createGermanAnswer(data)
 	return answer
 
-def createEnglishAnswer(data_list):
-	answer = ""
+def createEnglishAnswer(data_list, message):
+	audio = None
 	for data in data_list:
-		answer = "Word: " + data['word'] +".\n"
-	return answer
+		word = data['word'].capitalize()
+		answer = f"*{word}*\n\n"
+		answer += "*Pronunciation*:"
+		for phonetics in data["phonetics"]:
+			for (key, value) in phonetics.items():
+				if key == 'audio':
+					audio = value
+				else:
+					key = key.capitalize()
+					answer += f"\n{key}: {value}"
+		answer += "\n\n"
+		answer += "*Meaning*:\n"
+		for i, (key, value) in enumerate(data['meaning'].items()):
+			key = key.capitalize()
+			answer += f"_{key}_:\n"
+			for j, word in enumerate(value):
+				answer += f"{i + 1}.{j + 1}"
+				for k, v in word.items():
+					k = k.capitalize()
+					answer += f" *{k}*: {v}"
+				answer += "\n"
+			answer += "\n"
+		answer += "\n"
+		bot.send_message(message.chat.id, answer, parse_mode='Markdown')
+		if audio is not None:
+			bot.send_audio(message.chat.id, audio)
+
 
 if __name__ == '__main__':
 	bot.polling(none_stop=True, interval=0)
