@@ -154,7 +154,7 @@ def createAnswer(data_list, message):
 		answer += "\n"
 		bot.send_message(message.chat.id, answer, parse_mode='Markdown')
 		if audio is not None:
-			bot.send_audio(message.chat.id, audio)
+			bot.send_voice(message.chat.id, audio)
 
 
 if __name__ == '__main__':
