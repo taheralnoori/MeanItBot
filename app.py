@@ -3,6 +3,7 @@ import markups
 import google_dict
 import data_base
 import os
+import time
 
 bot_token = os.getenv("BOT_TOKEN")
 bot = telebot.TeleBot(bot_token)
@@ -155,7 +156,7 @@ def createAnswer(data_list, message):
 		answer += "\n"
 		bot.send_message(message.chat.id, answer, parse_mode='Markdown')
 		if audio is not None:
-			bot.send_voice(message.chat.id, audio)
+			msg = bot.send_audio(message.chat.id, audio)
 
 
 if __name__ == '__main__':
