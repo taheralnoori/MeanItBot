@@ -1,10 +1,11 @@
 import telebot
 import markups
-import config
 import google_dict
 import data_base
+import os
 
-bot = telebot.TeleBot(config.bot_token)
+bot_token = os.getenv("BOT_TOKEN")
+bot = telebot.TeleBot(bot_token)
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
