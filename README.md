@@ -1,4 +1,7 @@
 # MeanItBot
+
+![Example](https://i.ibb.co/f0Mtk6X/Screen-Shot-2020-11-13-at-3-11-30-PM.png)
+
 MeanIt is a Telegram Bot that helps you learn new words!
 Type in a word and it shows you its meanings!
 Bot supports 3 languages:
