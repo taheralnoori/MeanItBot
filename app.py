@@ -16,7 +16,7 @@ def send_welcome(message):
 		db.insertUser(str(message.from_user.id), "en")
 	else:
 		db.updateLanguage(str(message.from_user.id), "en")
-	msg = bot.send_message(message.chat.id, "I can explain to you any word.\nPlease select your preferred language:", reply_markup=markups.language_markup)
+	msg = bot.send_message(message.chat.id, "يمكنني أن أشرح لك أي كلمة فقط كلمات اسرلي ما اريد اي شي ورمان حيرم عليك 🌝🌚.\nيرجى تحديد لغتك المفضلة:", reply_markup=markups.language_markup)
 
 @bot.message_handler(commands=['help'])
 def get_info(message):
