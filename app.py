@@ -30,13 +30,13 @@ def get_info(message):
 		get_info_de(message)
 
 def get_info_en(message):
-	msg = "Hello, my name is *MeanIt*! I am here for you to help with new words! Just add the word down here and I will show you the meanings!"
-	msg += "\n\nYou can control me by sending these commands:\n\n"
-	msg += "*Change language:\n*"
-	msg += "/english - set current language English.\n"
-	msg += "/french - set current language French.\n"
-	msg += "/german - set current language German.\n\n"
-	msg += "/help - get help on using the bot.\n"
+	msg = "مرحبا، اسمي *MeanIt*! أنا هنا من أجلك للمساعدة في الكلمات الجديدة! فقط أضف الكلمة هنا وسأريك المعاني!"
+	msg += "\n\nيمكنك التحكم بي عن طريق إرسال هذه الأوامر:\n\n"
+	msg += "*تغيير اللغة:\n*"
+	msg += "/english - حدد اللغة الإنجليزية الحالية.\n"
+	msg += "/french - حدد اللغة الحالية الفرنسية.\n"
+	msg += "/german - حدد اللغة الإنجليزية الألمانية.\n\n"
+	msg += "/help - احصل على مساعدة بشأن استخدام الروبوت.\n"
 	bot.send_message(message.chat.id, msg, parse_mode='Markdown')
 
 def get_info_fr(message):
@@ -78,13 +78,13 @@ def setLanguage(call):
 def setEnglishLanguage(message):
 	db = data_base.DataBase()
 	user = db.findUser(str(message.from_user.id))
-	answer = "Now I know English" + flag('gb') + "\nPlease enter an unknown word."
+	answer = "الآن أعرف اللغة الإنجليزية" + flag('gb') + "\nPlease enter an unknown word."
 	if user is None:
 		db.insertUser(str(message.from_user.id), "en")
 	elif user[1] != "en":
 		db.updateLanguage(str(message.from_user.id), "en")
 	else:
-		answer = "I already know English" + flag('gb') + "\nPlease enter an unknown word."
+		answer = "أعرف اللغة الإنجليزية بالفعل" + flag('gb') + "\nPlease enter an unknown word."
 	msg = bot.send_message(message.chat.id, answer)
 
 @bot.message_handler(commands=['french'])
