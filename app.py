@@ -78,13 +78,13 @@ def setLanguage(call):
 def setEnglishLanguage(message):
 	db = data_base.DataBase()
 	user = db.findUser(str(message.from_user.id))
-	answer = "الآن أعرف اللغة الإنجليزية" + flag('gb') + "\nPlease enter an unknown word."
+	answer = "الآن أعرف اللغة الإنجليزية" + flag('gb') + "\nعفية ادخل كملة معروفه"
 	if user is None:
 		db.insertUser(str(message.from_user.id), "en")
 	elif user[1] != "en":
 		db.updateLanguage(str(message.from_user.id), "en")
 	else:
-		answer = "أعرف اللغة الإنجليزية بالفعل" + flag('gb') + "\nPlease enter an unknown word."
+		answer = "أعرف اللغة الإنجليزية بالفعل" + flag('gb') + "\nعفية ادخل كملة معروفه."
 	msg = bot.send_message(message.chat.id, answer)
 
 @bot.message_handler(commands=['french'])
@@ -122,7 +122,7 @@ def getWord(message):
 		createAnswer(data.json(), message)
 	else:
 		if user[1] == 'en':
-			bot.send_message(message.chat.id, "Unknown word.")
+			bot.send_message(message.chat.id, "كملة غير معروفه .")
 		elif user[1] == 'fr':
 			bot.send_message(message.chat.id, "Mot inconnu.")
 		elif user[1] == 'de':
